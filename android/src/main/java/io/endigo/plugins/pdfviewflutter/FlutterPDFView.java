@@ -76,6 +76,7 @@ public class FlutterPDFView implements PlatformView, MethodCallHandler {
                         methodChannel.invokeMethod("onRender", args);
                     }
                 })
+                .enableAnnotationRendering(true)
                 .enableDoubletap(true)
                 .defaultPage(0)
                 .load();
