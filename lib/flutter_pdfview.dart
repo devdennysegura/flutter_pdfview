@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -28,6 +29,9 @@ class PDFView extends StatefulWidget {
     this.autoSpacing = true,
     this.pageFling = true,
     this.pageSnap = true,
+    this.spacing = 10,
+    this.color = 0xffcccccc,
+    this.padding = const EdgeInsets.fromLTRB(11.0, 21.0, 11.0, 0.0),
   }) : super(key: key);
 
   @override
@@ -61,6 +65,9 @@ class PDFView extends StatefulWidget {
   final bool autoSpacing;
   final bool pageFling;
   final bool pageSnap;
+  final int spacing;
+  final int color;
+  final EdgeInsets padding;
 }
 
 class _PDFViewState extends State<PDFView> {
@@ -69,12 +76,16 @@ class _PDFViewState extends State<PDFView> {
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AndroidView(
-        viewType: 'plugins.endigo.io/pdfview',
-        onPlatformViewCreated: _onPlatformViewCreated,
-        gestureRecognizers: widget.gestureRecognizers,
-        creationParams: _CreationParams.fromWidget(widget).toMap(),
-        creationParamsCodec: const StandardMessageCodec(),
+      return Container(
+        color: Color(widget.color),
+        padding: widget.padding,
+        child: AndroidView(
+          viewType: 'plugins.endigo.io/pdfview',
+          onPlatformViewCreated: _onPlatformViewCreated,
+          gestureRecognizers: widget.gestureRecognizers,
+          creationParams: _CreationParams.fromWidget(widget).toMap(),
+          creationParamsCodec: const StandardMessageCodec(),
+        ),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return UiKitView(
@@ -142,6 +153,8 @@ class _PDFViewSettings {
     this.autoSpacing,
     this.pageFling,
     this.pageSnap,
+    this.color,
+    this.spacing,
   });
 
   static _PDFViewSettings fromWidget(PDFView widget) {
@@ -153,6 +166,8 @@ class _PDFViewSettings {
       autoSpacing: widget.autoSpacing,
       pageFling: widget.pageFling,
       pageSnap: widget.pageSnap,
+      color: widget.color,
+      spacing: widget.spacing,
     );
   }
 
@@ -163,6 +178,8 @@ class _PDFViewSettings {
   final bool autoSpacing;
   final bool pageFling;
   final bool pageSnap;
+  final int spacing;
+  final int color;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -173,6 +190,8 @@ class _PDFViewSettings {
       'autoSpacing': autoSpacing,
       'pageFling': pageFling,
       'pageSnap': pageSnap,
+      'spacing': spacing,
+      'color': color,
     };
   }
 
@@ -186,6 +205,12 @@ class _PDFViewSettings {
     }
     if (pageSnap != newSettings.pageSnap) {
       updates['pageSnap'] = newSettings.pageSnap;
+    }
+    if (color != newSettings.color) {
+      updates['color'] = newSettings.color;
+    }
+    if (spacing != newSettings.spacing) {
+      updates['spacing'] = newSettings.spacing;
     }
 
     return updates;
@@ -208,7 +233,6 @@ class PDFViewController {
   PDFView _widget;
 
   Future<bool> _onMethodCall(MethodCall call) async {
-    print([call.method, call.arguments]);
     switch (call.method) {
       case 'onRender':
         if (_widget.onRender != null) {
@@ -218,7 +242,8 @@ class PDFViewController {
         return null;
       case 'onPageChanged':
         if (_widget.onPageChanged != null) {
-          _widget.onPageChanged(call.arguments['page'], call.arguments['total']);
+          _widget.onPageChanged(
+              call.arguments['page'], call.arguments['total']);
         }
 
         return null;

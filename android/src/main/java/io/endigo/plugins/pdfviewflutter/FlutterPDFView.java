@@ -8,17 +8,22 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.platform.PlatformView;
+import android.graphics.Color;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.util.FitPolicy;
 import com.github.barteksc.pdfviewer.listener.*;
 import com.github.barteksc.pdfviewer.util.Constants;
+
+import android.util.Log;
 
 public class FlutterPDFView implements PlatformView, MethodCallHandler {
     private final PDFView pdfView;
     private final MethodChannel methodChannel;
+    private static String TAG = "FlutterPDFView";
 
     @SuppressWarnings("unchecked")
     FlutterPDFView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
@@ -33,7 +38,9 @@ public class FlutterPDFView implements PlatformView, MethodCallHandler {
             File file = new File(filePath);
 
             Constants.PRELOAD_OFFSET = 3;
-
+            int color = (int) (long)params.get("color") ;
+            // Log.d(TAG, "color "+color);
+            pdfView.setBackgroundColor(color);
             pdfView.fromFile(file)
                 .enableSwipe(getBoolean(params, "enableSwipe"))
                 .swipeHorizontal(getBoolean(params, "swipeHorizontal"))
@@ -42,6 +49,8 @@ public class FlutterPDFView implements PlatformView, MethodCallHandler {
                 .autoSpacing(getBoolean(params,"autoSpacing"))
                 .pageFling(getBoolean(params,"pageFling"))
                 .pageSnap(getBoolean(params,"pageSnap"))
+                .spacing(getInt(params, "spacing"))
+                .enableAntialiasing(true)
                 .onPageChange(new OnPageChangeListener() {
                     @Override
                     public void onPageChanged(int page, int total) {
@@ -154,6 +163,9 @@ public class FlutterPDFView implements PlatformView, MethodCallHandler {
 
     boolean getBoolean(Map<String, Object> params, String key) {
         return params.containsKey(key) ? (boolean) params.get(key): false;
+    }
+    Integer getInt(Map<String, Object> params, String key) {
+        return params.containsKey(key) ?  (int) params.get(key): 0;
     }
 
     String getString(Map<String, Object> params, String key) {

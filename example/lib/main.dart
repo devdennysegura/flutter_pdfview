@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       throw Exception('Error parsing asset file!');
     }
-    
+
     return completer.future;
   }
 
@@ -124,9 +124,12 @@ class _PDFScreenState extends State<PDFScreen> {
           PDFView(
             filePath: widget.path,
             enableSwipe: true,
-            swipeHorizontal: true,
-            autoSpacing: true,
-            pageFling: true,
+            swipeHorizontal: false,
+            autoSpacing: false,
+            pageFling: false,
+            pageSnap: false,
+            color: 0xff404040,
+            spacing: 22,
             onRender: (_pages) {
               setState(() {
                 pages = _pages;
@@ -137,13 +140,13 @@ class _PDFScreenState extends State<PDFScreen> {
               print(error.toString());
             },
             onPageError: (page, error) {
-              print('$page: ${error.toString()}');
+              // print('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController pdfViewController) {
               _controller.complete(pdfViewController);
             },
             onPageChanged: (int page, int total) {
-              print('page change: $page/$total');
+              // print('page change: $page/$total');
             },
           ),
           !isReady
