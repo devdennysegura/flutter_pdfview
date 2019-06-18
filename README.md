@@ -10,7 +10,7 @@ Add this to your package's pubspec.yaml file:
 
 ```
 dependencies:
-  flutter_pdfview: ^1.0.0+4
+  flutter_pdfview: ^1.0.0+8
 ```
 
 
@@ -60,6 +60,8 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 | autoSpacing             |    ✅    |  ✅ |
 | pageFling               |    ✅    |  ✅ |
 | pageSnap                |    ✅    |  ❌ |
+| spacing                 |    ✅    |  ✅ |
+| color                   |    ✅    |  ✅ |
 
 ## Controller Options
 
@@ -78,6 +80,8 @@ PDFView(
   swipeHorizontal: true,
   autoSpacing: false,
   pageFling: false,
+  color: 0xff404040,
+  spacing: 22,
   onRender: (_pages) {
     setState(() {
       pages = _pages;

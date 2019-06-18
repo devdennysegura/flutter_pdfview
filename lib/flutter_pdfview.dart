@@ -75,29 +75,28 @@ class _PDFViewState extends State<PDFView> {
       Completer<PDFViewController>();
   @override
   Widget build(BuildContext context) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return Container(
-        color: Color(widget.color),
-        padding: widget.padding,
-        child: AndroidView(
-          viewType: 'plugins.endigo.io/pdfview',
-          onPlatformViewCreated: _onPlatformViewCreated,
-          gestureRecognizers: widget.gestureRecognizers,
-          creationParams: _CreationParams.fromWidget(widget).toMap(),
-          creationParamsCodec: const StandardMessageCodec(),
-        ),
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return UiKitView(
-        viewType: 'plugins.endigo.io/pdfview',
-        onPlatformViewCreated: _onPlatformViewCreated,
-        gestureRecognizers: widget.gestureRecognizers,
-        creationParams: _CreationParams.fromWidget(widget).toMap(),
-        creationParamsCodec: const StandardMessageCodec(),
-      );
-    }
-    return Text(
-        '$defaultTargetPlatform is not yet supported by the webview_flutter plugin');
+    return Container(
+      color: Color(widget.color),
+      padding: widget.padding,
+      child: defaultTargetPlatform == TargetPlatform.android
+          ? AndroidView(
+              viewType: 'plugins.endigo.io/pdfview',
+              onPlatformViewCreated: _onPlatformViewCreated,
+              gestureRecognizers: widget.gestureRecognizers,
+              creationParams: _CreationParams.fromWidget(widget).toMap(),
+              creationParamsCodec: const StandardMessageCodec(),
+            )
+          : defaultTargetPlatform == TargetPlatform.iOS
+              ? UiKitView(
+                  viewType: 'plugins.endigo.io/pdfview',
+                  onPlatformViewCreated: _onPlatformViewCreated,
+                  gestureRecognizers: widget.gestureRecognizers,
+                  creationParams: _CreationParams.fromWidget(widget).toMap(),
+                  creationParamsCodec: const StandardMessageCodec(),
+                )
+              : Text(
+                  '$defaultTargetPlatform is not yet supported by the webview_flutter plugin'),
+    );
   }
 
   void _onPlatformViewCreated(int id) {

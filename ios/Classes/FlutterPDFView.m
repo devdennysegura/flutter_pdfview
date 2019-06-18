@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 #import "FlutterPDFView.h"
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0];
+
 @implementation FLTPDFViewFactory {
     NSObject<FlutterBinaryMessenger>* _messenger;
 }
@@ -66,8 +68,9 @@
             
             _pdfView.autoresizesSubviews = YES;
             _pdfView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            
-            _pdfView.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
+            _pdfView.backgroundColor =  UIColorFromRGB([args[@"color"] intValue]);
+            _pdfView.pageBreakMargins =  UIEdgeInsetsMake(0.0, 0.0, [args[@"spacing"] intValue], 0.0);
+            // _pdfView.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
             BOOL swipeHorizontal = [args[@"swipeHorizontal"] boolValue];
             if (swipeHorizontal) {
                 _pdfView.displayDirection = kPDFDisplayDirectionHorizontal;

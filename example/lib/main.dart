@@ -35,10 +35,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<File> createFileOfPdfUrl() async {
-    // final url =
-    // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
-    final url = "https://pdfkit.org/docs/guide.pdf";
-    final filename = url.substring(url.lastIndexOf("/") + 1);
+    final url =
+    "https://firebasestorage.googleapis.com/v0/b/employ-6e9e6.appspot.com/o/client%2F-KsVtnsEdbkFwcO0CpFf%2Femployee%2Fdocument%2F636964712586361815_0126884561.pdf?alt=media&token=d7d31477-99e6-4a7c-b0e7-ccb8df2c49bf";
+    // final url = "https://pdfkit.org/docs/guide.pdf";
+    final filename = 'guide.pdf';
     var request = await HttpClient().getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
